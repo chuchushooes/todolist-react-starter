@@ -1,0 +1,48 @@
+:root {
+  --major: #ff6600;
+  --gray: #767678;
+}
+
+html,
+body {
+  background-color: #f4f4f4;
+  font-family: 'Lato', 'Noto Sans TC', sans-serif;
+}
+
+.app {
+  text-align: center;
+  margin: 45px auto;
+  max-width: 600px;
+  min-width: 320px;
+  width: 100%;
+  background-color: white;
+  padding: 12px 16px;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  color: var(--major);
+  fill: var(--major);
+}
+
+// utilties
+.btn-reset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 100%;
+  vertical-align: baseline;
+  font-family: inherit;
+  font-weight: inherit;
+  appearance: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  cursor: pointer;
+  outline: 0;
+}
