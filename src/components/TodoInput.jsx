@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import styled from 'styled-components';
 
 const StyledAddTodoContainer = styled.div`
@@ -70,15 +71,51 @@ const StyledAddTodoActionContainer = styled.div`
 
 // 這是輸入欄位
 // inputValue 使用者當前輸入的值，onChange監聽輸入框表單，onKeyDown監聽使用者按下Enter，onAddTodo監聽使用者點及新增按鈕
-const TodoInput = ({inputValue, onChange, onKeyDown, onAddTodo}) => {
+const TodoInput = ({ inputValue, onChange, onKeyDown, onAddTodo }) => {
+  const handleOnchange = (e) => {
+    console.log(onChange);
+    onChange?.(e.target.value);
+    /*
+    '?'為語法糖，等同如下，如果有 onChange 才繼續，避免 undefined 產生 error
+    if (onChange) {
+      onChange(e.target.value); 
+    }
+    */
+  };
+
+  const handleOnclick = () => {
+    onAddTodo?.(inputValue);
+  };
+
   return (
-    <StyledAddTodoContainer>
+    <StyledAddTodoContainer
+      className={clsx('', { active: inputValue.length > 0 })}
+    >
       <StyledLabelIcon className="icon" htmlFor="add-todo-input" />
       <StyledInputContainer>
-        <input id="add-todo-input" type="text" placeholder="新增工作" />
+        <input
+          id="add-todo-input"
+          type="text"
+          placeholder="新增工作"
+          value={inputValue}
+          onChange={handleOnchange}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              onKeyDown?.(inputValue);
+            }
+          }}
+          /*onKeyDown是一個事件監聽，他會監聽鍵盤發出的name值，
+          我們的目標是當使用者按下enter發送，所以要讓e.key = 'Enter' 才可執行
+          接著就和 handleOnclick 一樣 onKeyDown prop 回傳 inputValue
+          */
+        />
       </StyledInputContainer>
-      <StyledAddTodoActionContainer>
-        <button className="btn-reset">新增</button>
+      <StyledAddTodoActionContainer
+        className={clsx('', { active: inputValue.length > 0 })}
+      >
+        <button className="btn-reset" onClick={handleOnclick}>
+          新增
+        </button>
       </StyledAddTodoActionContainer>
     </StyledAddTodoContainer>
   );
