@@ -67,7 +67,10 @@ const StyledAddTodoActionContainer = styled.div`
     }
   }
 `;
-const TodoInput = () => {
+
+// 這是輸入欄位
+// inputValue 使用者當前輸入的值，onChange監聽輸入框表單，onKeyDown監聽使用者按下Enter，onAddTodo監聽使用者點及新增按鈕
+const TodoInput = ({inputValue, onChange, onKeyDown, onAddTodo}) => {
   return (
     <StyledAddTodoContainer>
       <StyledLabelIcon className="icon" htmlFor="add-todo-input" />

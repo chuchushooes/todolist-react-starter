@@ -23,13 +23,14 @@ const dummyTodos = [
   },
 ];
 
+// 這是TodoPage，Todo的入口，這裡傳一個假資料給TodoCollection
 const TodoPage = () => {
   return (
     <div>
       TodoPage
       <Header />
       <TodoInput />
-      <TodoCollection />
+      <TodoCollection todos={dummyTodos} />
       <Footer />
     </div>
   );
