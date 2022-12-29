@@ -4,6 +4,7 @@ import {
   CheckCircleIcon,
   CheckHoverIcon,
 } from 'assets/images';
+import clsx from 'clsx';
 
 const StyledTaskItem = styled.div`
   min-height: 52px;
@@ -101,9 +102,10 @@ const StyledTaskItem = styled.div`
 `;
 
 // 這是每一個 TodoItem
-const TodoItem = ({todo, onToggleDone, onSave, onDelete, onChangeMode}) => {
+// 根據條件切換 ClassName - clsx，來判斷是否為ture，如果是done是true，就顯示done，style就會接收done的class顯示
+const TodoItem = ({ todo, onToggleDone, onSave, onDelete, onChangeMode }) => {
   return (
-    <StyledTaskItem>
+    <StyledTaskItem className={clsx('', { done: todo.isDone })}>
       <div className="task-item-checked">
         <span className="icon icon-checked" />
       </div>
