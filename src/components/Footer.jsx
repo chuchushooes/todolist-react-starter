@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import { useContext } from 'react';
+import { TodosContext } from '../pages/TodoPage';
 
 const StyledFooter = styled.footer`
   display: flex;
@@ -32,9 +34,10 @@ const StyledButton = styled.button`
 `;
 
 const Footer = () => {
+  const count = useContext(TodosContext);
   return (
     <StyledFooter>
-      <p>剩餘項目數： 0</p>
+      <p>剩餘項目數：{count}</p>
       <StyledButton>登出</StyledButton>
     </StyledFooter>
   );

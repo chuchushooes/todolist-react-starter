@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createContext } from 'react';
 import { Footer, Header, TodoCollection, TodoInput } from 'components';
 
 const dummyTodos = [
@@ -127,6 +128,7 @@ const TodoPage = () => {
     setTodos((prevTodos) => {
       return prevTodos.filter((todo) => todo.id !== id);
     });
+    console.log(todos.length);
   };
 
   return (
@@ -146,9 +148,14 @@ const TodoPage = () => {
         onSave={handleSave}
         onDelete={handleDeleteTodo}
       />
-      <Footer />
+      <TodosContext.Provider value={todos.length}>
+        {' '}
+        {/* 提供目前item數目給Footer */}
+        <Footer />
+      </TodosContext.Provider>
     </div>
   );
 };
 
 export default TodoPage;
+export const TodosContext = createContext(dummyTodos.length); //初始值為todos長度
