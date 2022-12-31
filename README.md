@@ -34,7 +34,7 @@ cd todolist-react-starter
 npm i install
 ```
 
-6. 執行專案，輸入`npm start`至終端成功後就會自動顯示至瀏覽器
+4. 執行專案，輸入`npm start`至終端成功後就會自動顯示至瀏覽器
 
 ```
 npm start
