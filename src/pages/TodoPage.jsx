@@ -120,6 +120,15 @@ const TodoPage = () => {
       });
     });
   };
+
+  // 點擊 X 後刪除該 todo
+  // 不能使用splice會修改到原陣列，用filter新增全新的陣列，篩選掉不要的內容
+  const handleDeleteTodo = (id) => {
+    setTodos((prevTodos) => {
+      return prevTodos.filter((todo) => todo.id !== id);
+    });
+  };
+
   return (
     <div>
       TodoPage
@@ -135,6 +144,7 @@ const TodoPage = () => {
         onToggleDone={handleToggleDone}
         onChangeMode={handleChangeMode}
         onSave={handleSave}
+        onDelete={handleDeleteTodo}
       />
       <Footer />
     </div>

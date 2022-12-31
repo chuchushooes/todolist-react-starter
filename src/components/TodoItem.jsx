@@ -145,7 +145,7 @@ const TodoItem = ({ todo, onToggleDone, onSave, onDelete, onChangeMode }) => {
         {/*編輯輸入框加上初始值 value={todo.title}，會被鎖住，所以用defaultValue(一開始渲染時的初始值)*/}
       </div>
       <div className="task-item-action ">
-        <button className="btn-reset btn-destroy icon"></button>
+        <button className="btn-reset btn-destroy icon" onClick={() => { onDelete?.(todo.id)}}></button>
       </div>
     </StyledTaskItem>
   );

@@ -26,6 +26,9 @@ const TodoCollection = ({
             onSave={({ id, title }) => {
               onSave?.({ id, title });
             }} // 將TodoItem的 id,title 再傳上去
+            onDelete={(id) => {
+              onDelete?.(id);
+            }} //將TodoItem的 id 再傳上去
           />
         );
       })}
