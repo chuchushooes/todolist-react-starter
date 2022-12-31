@@ -39,7 +39,7 @@ const TodoPage = () => {
     if (inputValue.length === 0) {
       return;
     }
-    // 這裡要使用 callback function的方式嗎?
+    // 這裡要使用function的方式嗎? 先去拿之前資料再進行修改
     setTodos((prevTodos) => {
       return [
         ...prevTodos,
@@ -72,6 +72,21 @@ const TodoPage = () => {
     setInputValue('');
   };
 
+  //更改切換完成/未完成
+  const handleToggleDone = (id) => {
+    setTodos((prevTodos) => {
+      return prevTodos.map((todo) => {
+        if (todo.id === id) {
+          return {
+            ...todo,
+            isDone: !todo.isDone,
+          };
+        }
+        return todo;
+      });
+    });
+  };
+
   return (
     <div>
       TodoPage
@@ -82,7 +97,7 @@ const TodoPage = () => {
         onAddTodo={handleAddTodo}
         onKeyDown={handleKeyDown}
       />
-      <TodoCollection todos={todos} />
+      <TodoCollection todos={todos} onToggleDone={handleToggleDone} />
       <Footer />
     </div>
   );

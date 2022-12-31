@@ -104,10 +104,11 @@ const StyledTaskItem = styled.div`
 // 這是每一個 TodoItem
 // 根據條件切換 ClassName - clsx，來判斷是否為ture，如果是done是true，就顯示done，style就會接收done的class顯示
 const TodoItem = ({ todo, onToggleDone, onSave, onDelete, onChangeMode }) => {
+  
   return (
     <StyledTaskItem className={clsx('', { done: todo.isDone })}>
       <div className="task-item-checked">
-        <span className="icon icon-checked" />
+        <span className="icon icon-checked" onClick={() => { onToggleDone?.(todo.id);}} />
       </div>
       <div className="task-item-body">
         <span className="task-item-body-text">{todo.title}</span>

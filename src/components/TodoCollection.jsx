@@ -12,8 +12,16 @@ const TodoCollection = ({
   return (
     <div>
       TodoCollection
-      {todos.map(todo => {
-       return (<TodoItem key={todo.id} todo={todo} />);
+      {todos.map((todo) => {
+        return (
+          <TodoItem
+            key={todo.id}
+            todo={todo}
+            onToggleDone={(id) => {
+              onToggleDone?.(id);
+            }}
+          /> //將TodoItem的 id 再傳上去
+        );
       })}
     </div>
   );
