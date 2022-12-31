@@ -1,7 +1,7 @@
 # 來一個 Todolist - Introduction
 
 一個簡單的 Todolist，可以新增刪除修改你的項目，趕快來用看看吧。
-![image](https://github.com/chuchushooes/todolist-react-starter/src/assets/gitImages.TodoPage.png)
+![image](https://github.com/chuchushooes/todolist-react-starter/blob/main/src/assets/gitImages/TodoPage.png)
 
 ## 功能列表 - Features
 
