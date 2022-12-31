@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useRef } from 'react';
 import {
   CheckActiveIcon,
   CheckCircleIcon,
@@ -104,15 +105,44 @@ const StyledTaskItem = styled.div`
 // 這是每一個 TodoItem
 // 根據條件切換 ClassName - clsx，來判斷是否為ture，如果是done是true，就顯示done，style就會接收done的class顯示
 const TodoItem = ({ todo, onToggleDone, onSave, onDelete, onChangeMode }) => {
-  
+  const inputRef = useRef(null);
+  const handleKeyDown = (e) => {
+    // 字串長度大於零按下Enter才能被儲存更新
+    if (inputRef.current.value.length > 0 && e.key === 'Enter') {
+      onSave?.({ id: todo.id, title: inputRef.current.value });
+      console.log(inputRef.current.value); //測試印出來看
+      //title是輸入的當下值會被儲存
+    }
+    if (e.key === 'Escape') {
+      onChangeMode?.({ id: todo.id, isEdit: false });
+    }
+  };
   return (
-    <StyledTaskItem className={clsx('', { done: todo.isDone })}>
+    <StyledTaskItem
+      className={clsx('', { done: todo.isDone }, { edit: todo.isEdit })}
+    >
       <div className="task-item-checked">
-        <span className="icon icon-checked" onClick={() => { onToggleDone?.(todo.id);}} />
+        <span
+          className="icon icon-checked"
+          onClick={() => {
+            onToggleDone?.(todo.id);
+          }}
+        />
       </div>
-      <div className="task-item-body">
+      <div
+        className="task-item-body"
+        onDoubleClick={() => {
+          onChangeMode?.({ id: todo.id, isEdit: true }); //點擊後回傳 key value物件值(有二個物件值以上的時候)
+        }}
+      >
         <span className="task-item-body-text">{todo.title}</span>
-        <input className="task-item-body-input" />
+        <input
+          ref={inputRef}
+          className="task-item-body-input"
+          defaultValue={todo.title}
+          onKeyDown={handleKeyDown}
+        />{' '}
+        {/*編輯輸入框加上初始值 value={todo.title}，會被鎖住，所以用defaultValue(一開始渲染時的初始值)*/}
       </div>
       <div className="task-item-action ">
         <button className="btn-reset btn-destroy icon"></button>

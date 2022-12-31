@@ -87,6 +87,39 @@ const TodoPage = () => {
     });
   };
 
+  //點擊二下後可編輯title , 當 Escape 時離開編輯模式
+  const handleChangeMode = ({ id, isEdit }) => {
+    setTodos((prevTodos) => {
+      return prevTodos.map((todo) => {
+        if (todo.id === id) {
+          return {
+            ...todo,
+            isEdit,
+          };
+        }
+        return {
+          ...todo,
+          isEdit: false,
+        };
+      });
+    });
+  };
+
+  // 按下 Enter 儲存編輯
+  const handleSave = ({ id, title }) => {
+    setTodos((prevTodos) => {
+      return prevTodos.map((todo) => {
+        if (todo.id === id) {
+          return {
+            ...todo,
+            title: title,
+            isEdit: false,
+          };
+        }
+        return todo;
+      });
+    });
+  };
   return (
     <div>
       TodoPage
@@ -97,7 +130,12 @@ const TodoPage = () => {
         onAddTodo={handleAddTodo}
         onKeyDown={handleKeyDown}
       />
-      <TodoCollection todos={todos} onToggleDone={handleToggleDone} />
+      <TodoCollection
+        todos={todos}
+        onToggleDone={handleToggleDone}
+        onChangeMode={handleChangeMode}
+        onSave={handleSave}
+      />
       <Footer />
     </div>
   );

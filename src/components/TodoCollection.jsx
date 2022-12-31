@@ -19,8 +19,14 @@ const TodoCollection = ({
             todo={todo}
             onToggleDone={(id) => {
               onToggleDone?.(id);
-            }}
-          /> //將TodoItem的 id 再傳上去
+            }} //將TodoItem的 id 再傳上去
+            onChangeMode={({ id, isEdit }) => {
+              onChangeMode?.({ id, isEdit });
+            }} // 將TodoItem的 id,isEdit 再傳上去
+            onSave={({ id, title }) => {
+              onSave?.({ id, title });
+            }} // 將TodoItem的 id,title 再傳上去
+          />
         );
       })}
     </div>
