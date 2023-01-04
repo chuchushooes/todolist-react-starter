@@ -128,7 +128,6 @@ const TodoPage = () => {
     setTodos((prevTodos) => {
       return prevTodos.filter((todo) => todo.id !== id);
     });
-    console.log(todos.length);
   };
 
   return (
