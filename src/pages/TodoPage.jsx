@@ -1,33 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createContext } from 'react';
 import { Footer, Header, TodoCollection, TodoInput } from 'components';
+import { getTodos, createTodo } from '../api/todos';
 
-const dummyTodos = [
-  {
-    title: 'Learn react-router',
-    isDone: true,
-    id: 1,
-  },
-  {
-    title: 'Learn to create custom hooks',
-    isDone: false,
-    id: 2,
-  },
-  {
-    title: 'Learn to use context',
-    isDone: true,
-    id: 3,
-  },
-  {
-    title: 'Learn to implement auth',
-    isDone: false,
-    id: 4,
-  },
-];
+// dummyTodos因為串了後端的db後就可刪除
 
 // 這是TodoPage，Todo的入口，這裡傳一個假資料給TodoCollection
 const TodoPage = () => {
-  const [todos, setTodos] = useState(dummyTodos);
+  const [todos, setTodos] = useState([]); //預設是空陣列我們抓後端db的資料從API上
   const [inputValue, setInputValue] = useState('');
 
   const handleChange = (value) => {
@@ -35,42 +15,64 @@ const TodoPage = () => {
     setInputValue(value);
   };
 
-  const handleAddTodo = () => {
+  // function要改成 async/await 模式
+  const handleAddTodo = async () => {
     // 簡單的錯誤判斷，當input內沒有值就return不讓他更新
     if (inputValue.length === 0) {
       return;
     }
-    // 這裡要使用function的方式嗎? 先去拿之前資料再進行修改
-    setTodos((prevTodos) => {
-      return [
-        ...prevTodos,
-        {
-          title: inputValue,
-          isDone: false,
-          id: Math.random() * 100,
-        },
-      ];
-    });
 
-    setInputValue(''); //todo加入後清空input內value值
+    try {
+      //使用 createTodo 取得後端資料
+      // 這裡初始值就只有 title 和 isDone，id 由資料庫自行產生
+      const data = await createTodo({
+        title: inputValue,
+        isDone: false,
+      });
+      // 這裡要使用function的方式嗎? 先去拿之前資料再進行修改
+      setTodos((prevTodos) => {
+        return [
+          ...prevTodos,
+          {
+            title: data.title,
+            isDone: data.isDone,
+            id: data.id,
+            isEdit: false,
+          },
+        ];
+      });
+      setInputValue(''); //todo加入後清空input內value值
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   // 和 handleTodo 原理一樣直接複製貼上
-  const handleKeyDown = () => {
+  const handleKeyDown = async () => {
     if (inputValue.length === 0) {
       return;
     }
-    setTodos((prevTodos) => {
-      return [
-        ...prevTodos,
-        {
-          title: inputValue,
-          isDone: false,
-          id: Math.random() * 100,
-        },
-      ];
-    });
-    setInputValue('');
+    try {
+      const data = await createTodo({
+        title: inputValue,
+        isDone: false,
+      });
+
+      setTodos((prevTodos) => {
+        return [
+          ...prevTodos,
+          {
+            title: data.title,
+            isDone: data.isDone,
+            id: data.id,
+            isEdit: false,
+          },
+        ];
+      });
+      setInputValue('');
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   //更改切換完成/未完成
@@ -130,6 +132,19 @@ const TodoPage = () => {
     });
   };
 
+  useEffect(() => {
+    const getTodosAsync = async () => {
+      try {
+        const todos = await getTodos(); // 這裡使用getTodos就可以從後端拿取資料
+        setTodos(todos.map((todo) => ({ ...todo, isEdit: false })));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    getTodosAsync();
+  }, []); //這裡deps空白是因為只有一開始需要拿資料之後不再使用
+
   return (
     <div>
       TodoPage
@@ -157,4 +172,4 @@ const TodoPage = () => {
 };
 
 export default TodoPage;
-export const TodosContext = createContext(dummyTodos.length); //初始值為todos長度
+export const TodosContext = createContext(0); //初始值為todos長度,為空陣列0
