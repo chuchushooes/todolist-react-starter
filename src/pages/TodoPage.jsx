@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { createContext } from 'react';
 import { Footer, Header, TodoCollection, TodoInput } from 'components';
-import { getTodos, createTodo } from '../api/todos';
+import { getTodos, createTodo, patchTodo, deleteTodo } from '../api/todos';
 
 // dummyTodos因為串了後端的db後就可刪除
 
@@ -75,22 +75,35 @@ const TodoPage = () => {
     }
   };
 
-  //更改切換完成/未完成
-  const handleToggleDone = (id) => {
-    setTodos((prevTodos) => {
-      return prevTodos.map((todo) => {
-        if (todo.id === id) {
-          return {
-            ...todo,
-            isDone: !todo.isDone,
-          };
-        }
-        return todo;
+  //更改切換完成/未完成，isDone的true或false修改
+  const handleToggleDone = async (id) => {
+    // 先用 find 找正確 id 的值，再去用 patch 更新
+    const currentTodo = todos.find((todo) => todo.id === id);
+    try {
+      await patchTodo({
+        //這裡是去更新db，對應id、修改isDone
+        id,
+        isDone: !currentTodo.isDone,
       });
-    });
+
+      setTodos((prevTodos) => {
+        // 這裡是去更新畫面，所以讓這二者同步處理維持畫面完整
+        return prevTodos.map((todo) => {
+          if (todo.id === id) {
+            return {
+              ...todo,
+              isDone: !todo.isDone,
+            };
+          }
+          return todo;
+        });
+      });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  //點擊二下後可編輯title , 當 Escape 時離開編輯模式
+  //點擊二下後可編輯title , 當 Escape 時離開編輯模式(當下編輯無須上傳db因為尚未按enter)
   const handleChangeMode = ({ id, isEdit }) => {
     setTodos((prevTodos) => {
       return prevTodos.map((todo) => {
@@ -108,20 +121,29 @@ const TodoPage = () => {
     });
   };
 
-  // 按下 Enter 儲存編輯
-  const handleSave = ({ id, title }) => {
-    setTodos((prevTodos) => {
-      return prevTodos.map((todo) => {
-        if (todo.id === id) {
-          return {
-            ...todo,
-            title: title,
-            isEdit: false,
-          };
-        }
-        return todo;
+  // 按下 Enter 儲存編輯，需上傳 db，這裡回傳資料是 id(對應路由) 和 title(修改title)
+  const handleSave = async ({ id, title }) => {
+    try {
+      await patchTodo({
+        id,
+        title,
       });
-    });
+
+      setTodos((prevTodos) => {
+        return prevTodos.map((todo) => {
+          if (todo.id === id) {
+            return {
+              ...todo,
+              title: title,
+              isEdit: false,
+            };
+          }
+          return todo;
+        });
+      });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   // 點擊 X 後刪除該 todo
@@ -138,7 +160,7 @@ const TodoPage = () => {
         const todos = await getTodos(); // 這裡使用getTodos就可以從後端拿取資料
         setTodos(todos.map((todo) => ({ ...todo, isEdit: false })));
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     };
 
