@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { createContext } from 'react';
 import { Footer, Header, TodoCollection, TodoInput } from 'components';
-import { getTodos, createTodo, patchTodo, deleteTodo } from '../api/todos';
+import { getTodos, createTodo, patchTodo, deleteTodo } from '../api/todos'; //串接建立好的 api
 
 // dummyTodos因為串了後端的db後就可刪除
 
@@ -148,10 +148,15 @@ const TodoPage = () => {
 
   // 點擊 X 後刪除該 todo
   // 不能使用splice會修改到原陣列，用filter新增全新的陣列，篩選掉不要的內容
-  const handleDeleteTodo = (id) => {
-    setTodos((prevTodos) => {
-      return prevTodos.filter((todo) => todo.id !== id);
-    });
+  const handleDeleteTodo = async (id) => {
+    try {
+      await deleteTodo(id); // 給 detleTodo api 參數讓他去刪除 db
+      setTodos((prevTodos) => {
+        return prevTodos.filter((todo) => todo.id !== id);
+      });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useEffect(() => {

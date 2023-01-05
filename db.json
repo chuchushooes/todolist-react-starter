@@ -1,33 +1,13 @@
 {
   "todos": [
     {
-      "title": "Learn react-routersavbbc",
-      "isDone": true,
-      "id": 1
-    },
-    {
-      "title": "Learn to create custom hookss",
-      "isDone": false,
-      "id": 2
-    },
-    {
-      "title": "Learn to use context",
-      "isDone": false,
-      "id": 3
-    },
-    {
-      "title": "Learn to implement auth",
-      "isDone": true,
-      "id": 4
-    },
-    {
       "title": "Learn postman1",
       "isDone": true,
       "id": 5
     },
     {
       "title": "Learn postman2",
-      "isDone": false,
+      "isDone": true,
       "id": 6
     },
     {
@@ -39,6 +19,11 @@
       "title": "Learn postman6",
       "isDone": false,
       "id": 69
+    },
+    {
+      "title": "sss",
+      "isDone": false,
+      "id": 70
     }
   ]
 }
