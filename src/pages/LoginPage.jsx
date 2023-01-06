@@ -7,13 +7,15 @@ import {
 import { ACLogoIcon } from 'assets/images';
 import { AuthInput } from 'components';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../api/auth';
 import Swal from 'sweetalert2';
 
 const LoginPage = () => {
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
+
+  const navigate = useNavigate()
 
   const handleClick = async () => {
     //先驗證使用者輸入是否有值
@@ -41,6 +43,7 @@ const LoginPage = () => {
         position: 'top',
         timer: 1000,
       });
+      navigate('/todo')
       return;
     }
     //登錄失敗的跳出欄位
