@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useContext } from 'react';
 import { TodosContext } from '../pages/TodoPage';
+import { useNavigate } from 'react-router-dom';
 
 const StyledFooter = styled.footer`
   display: flex;
@@ -35,10 +36,16 @@ const StyledButton = styled.button`
 
 const Footer = () => {
   const count = useContext(TodosContext);
+  // React Hooks 點擊後 localStorage 刪除 authToken 後返回登錄頁
+  const navigate = useNavigate();
+  const handleClick = () => {
+    localStorage.removeItem('authToken');
+    navigate('/login');
+  };
   return (
     <StyledFooter>
       <p>剩餘項目數：{count}</p>
-      <StyledButton>登出</StyledButton>
+      <StyledButton onClick={handleClick}>登出</StyledButton>
     </StyledFooter>
   );
 };
