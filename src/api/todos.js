@@ -32,7 +32,7 @@ export const patchTodo = async (payload) => {
     // try catch 是怕接收會有問題才使用的報錯方式
     // patch修改 router 後要放 id
     const res = await axios.patch(`${baseUrl}/todos/${id}`, { title, isDone }); // 把資料更新到裡面
-    console.log(res.data);
+    console.log(JSON.stringify({ res })); // 這裡可以查看回傳去TodoPage的資料是什麼
     return res.data;
   } catch (err) {
     console.error('[Patch todos failed]:', err);
