@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { createContext } from 'react';
 import { Footer, Header, TodoCollection, TodoInput } from 'components';
 import { getTodos, createTodo, patchTodo, deleteTodo } from '../api/todos'; //串接建立好的 api
+import { useNavigate } from 'react-router-dom';
+import { checkPermission } from '../api/auth';
 
 // dummyTodos因為串了後端的db後就可刪除
 
@@ -9,6 +11,8 @@ import { getTodos, createTodo, patchTodo, deleteTodo } from '../api/todos'; //�
 const TodoPage = () => {
   const [todos, setTodos] = useState([]); //預設是空陣列我們抓後端db的資料從API上
   const [inputValue, setInputValue] = useState('');
+
+  const navigate = useNavigate();
 
   const handleChange = (value) => {
     console.log('input', value);
@@ -171,6 +175,24 @@ const TodoPage = () => {
 
     getTodosAsync();
   }, []); //這裡deps空白是因為只有一開始需要拿資料之後不再使用
+
+  useEffect(() => {
+    const checkTokenIsValid = async () => {
+      const authToken = localStorage.getItem('authToken');
+
+      if (!authToken) {
+        // 如果沒有authToken 就導向login page
+        navigate('/login');
+      }
+
+      const result = await checkPermission(authToken);
+      if (!result) {
+        // 如果沒有結果就導向 login page 頁面
+        navigate('/login');
+      }
+    };
+    checkTokenIsValid(); //執行上面寫好的fn
+  }, [navigate]); //加入deps，當nav改變useEffect才會改變，這裡的改變是因為在每一頁被 mount 時，是渲染出一個全新的頁面元件，所以nav監聽到的變動是從 null 變成 function reference，而不是從 A 頁 nav 到 B 頁
 
   return (
     <div>

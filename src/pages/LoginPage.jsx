@@ -6,16 +6,16 @@ import {
 } from 'components/common/auth.styled';
 import { ACLogoIcon } from 'assets/images';
 import { AuthInput } from 'components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { login } from '../api/auth';
+import { login, checkPermission } from '../api/auth';
 import Swal from 'sweetalert2';
 
 const LoginPage = () => {
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleClick = async () => {
     //先驗證使用者輸入是否有值
@@ -43,7 +43,7 @@ const LoginPage = () => {
         position: 'top',
         timer: 1000,
       });
-      navigate('/todo')
+      navigate('/todo');
       return;
     }
     //登錄失敗的跳出欄位
@@ -55,6 +55,24 @@ const LoginPage = () => {
       timer: 1000,
     });
   };
+
+  useEffect(() => {
+    const checkTokenIsValid = async () => {
+      const authToken = localStorage.getItem('authToken');
+
+      if (!authToken) {
+        // 如果沒有authToken 就返回
+        return;
+      }
+
+      const result = await checkPermission(authToken);
+      if (result) {
+        // 如果結果成功就導向 todos 頁面
+        navigate('/todo');
+      }
+    };
+    checkTokenIsValid(); //執行上面寫好的fn
+  }, [navigate]); //加入deps，當nav改變useEffect才會改變，這裡是指當我們在login或signup page 時我們直接改router的路徑企圖直接前往todos時所做的防範
 
   return (
     <AuthContainer>

@@ -6,9 +6,9 @@ import {
 } from 'components/common/auth.styled';
 import { ACLogoIcon } from 'assets/images';
 import { AuthInput } from 'components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { register } from '../api/auth';
+import { register, checkPermission } from '../api/auth';
 import Swal from 'sweetalert2';
 
 const SignUpPage = () => {
@@ -58,6 +58,23 @@ const SignUpPage = () => {
     });
   };
 
+  useEffect(() => {
+    const checkTokenIsValid = async () => {
+      const authToken = localStorage.getItem('authToken');
+
+      if (!authToken) {
+        // 如果沒有authToken 就返回
+        return;
+      }
+
+      const result = await checkPermission(authToken);
+      if (result) {
+        // 如果結果成功就導向 todos 頁面
+        navigate('/todo');
+      }
+    };
+    checkTokenIsValid(); //執行上面寫好的fn
+  }, [navigate]); //加入deps，當nav改變useEffect才會改變，這裡是指當我們在login或signup page 時我們直接改router的路徑企圖直接前往todos時所做的防範
   return (
     <AuthContainer>
       <div>
