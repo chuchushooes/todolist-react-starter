@@ -3,6 +3,7 @@ import { createContext } from 'react';
 import { register, login, checkPermission } from '../api/auth';
 import * as jwt from 'jsonwebtoken'; // 這裡導入全部並命名為 jwt 做使用
 import { useLocation } from 'react-router-dom';
+import { useContext } from 'react';
 
 // 初始化定義 defaultAuth 資訊
 const defaultAuthContext = {
@@ -17,8 +18,10 @@ const defaultAuthContext = {
 // 帶入預設的context值 default
 const AuthContext = createContext(defaultAuthContext);
 
-//建立 provider 來管理 context 內的狀態操作
+//建立 useAuth 這個 Hooks，當 Pages 都執行 useAuth 時，都能引用 Context 內容
+export const useAuth = () => useContext(AuthContext);
 
+//建立 provider 來管理 context 內的狀態操作
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false); //預設是否認證
   const [payload, setPayload] = useState(null); // 預設使用者資料為null
@@ -57,7 +60,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         isAuthenticated,
-        currentMember: payload && { id: payload.sub, name: payload.name }, //payload條件式，如果有值就讓再命名 id 和 name (這裡的 payload 還沒寫好，應該是 useState 內的 payload)
+        currentMember: payload && { id: payload.sub, name: payload.name }, //payload條件式，如果有值就讓再命名 id 和 name (這裡的 payload 為驗證過後的 payload)
         register: async (data) => {
           //註冊需要的內容命名他是 data
           //需要注意，在 AuthContext 不會直接知道使用者在註冊表單的輸入值，所以需要補上一個 data 當成調用函式時的參數
