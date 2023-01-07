@@ -176,23 +176,7 @@ const TodoPage = () => {
     getTodosAsync();
   }, []); //這裡deps空白是因為只有一開始需要拿資料之後不再使用
 
-  useEffect(() => {
-    const checkTokenIsValid = async () => {
-      const authToken = localStorage.getItem('authToken');
-
-      if (!authToken) {
-        // 如果沒有authToken 就導向login page
-        navigate('/login');
-      }
-
-      const result = await checkPermission(authToken);
-      if (!result) {
-        // 如果沒有結果就導向 login page 頁面
-        navigate('/login');
-      }
-    };
-    checkTokenIsValid(); //執行上面寫好的fn
-  }, [navigate]); //加入deps，當nav改變useEffect才會改變，這裡的改變是因為在每一頁被 mount 時，是渲染出一個全新的頁面元件，所以nav監聽到的變動是從 null 變成 function reference，而不是從 A 頁 nav 到 B 頁
+  //把身分認證的 effect 搬到 AuthContext 內
 
   return (
     <div>

@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createContext } from 'react';
-import { register, login } from '../api/auth';
+import { register, login, checkPermission } from '../api/auth';
 import * as jwt from 'jsonwebtoken'; // 這裡導入全部並命名為 jwt 做使用
+import { useLocation } from 'react-router-dom';
 
 // 初始化定義 defaultAuth 資訊
 const defaultAuthContext = {
@@ -21,6 +22,35 @@ const AuthContext = createContext(defaultAuthContext);
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false); //預設是否認證
   const [payload, setPayload] = useState(null); // 預設使用者資料為null
+
+  const { pathname } = useLocation(); //將當前頁面的路徑值取出(這是useLocation既有的屬性)
+
+  //原本用nav判斷是否變動，現在改由 pathname 判斷
+  useEffect(() => {
+    const checkTokenIsValid = async () => {
+      const authToken = localStorage.getItem('authToken');
+
+      if (!authToken) {
+        // 如果沒有authToken後續就不用作check的動作
+        setPayload(null);
+        setIsAuthenticated(false);
+        return;
+      }
+
+      // 如果有 token 就拿去做驗證看是否有效
+      const result = await checkPermission(authToken);
+      if (result) {
+        // 如果驗證成功去更改state，token用jwt解析出payload，放入setPayload
+        setIsAuthenticated(true);
+        const tempPayload = jwt.decode(authToken);
+        setPayload(tempPayload);
+      } else {
+        setPayload(null);
+        setIsAuthenticated(false);
+      }
+    };
+    checkTokenIsValid(); //執行上面寫好的fn
+  }, [pathname]); // deps由nav改成pathname
 
   //這裡Provider的value會定義defaultAuthContext內的值是什麼
   return (
