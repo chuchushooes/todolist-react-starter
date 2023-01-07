@@ -21,8 +21,8 @@ const StyledGreetingText = styled.div`
   }
 `;
 
-// 接收使用者名稱 username
-const Header = ({username}) => {
+// 接收使用者名稱 username，在TodoPage新增 prop 為currentMember
+const Header = ({ username }) => {
   return (
     <StyledHeader>
       <h3>Tasks</h3>

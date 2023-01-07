@@ -15,7 +15,8 @@ const TodoPage = () => {
   const navigate = useNavigate();
 
   //這裡不用取出方法，只要取出是否認證
-  const { isAuthenticated } = useAuth();
+  // 因為我們要確認人員所以帶入 currentMember
+  const { isAuthenticated, currentMember } = useAuth();
 
   const handleChange = (value) => {
     console.log('input', value);
@@ -190,7 +191,7 @@ const TodoPage = () => {
   return (
     <div>
       TodoPage
-      <Header />
+      <Header username={currentMember?.name} />
       <TodoInput
         inputValue={inputValue}
         onChange={handleChange}

@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import { useContext } from 'react';
 import { TodosContext } from '../pages/TodoPage';
-import { useNavigate } from 'react-router-dom';
+
+import { useAuth } from '.../context/AuthContext';
 
 const StyledFooter = styled.footer`
   display: flex;
@@ -37,10 +38,13 @@ const StyledButton = styled.button`
 const Footer = () => {
   const count = useContext(TodosContext);
   // React Hooks 點擊後 localStorage 刪除 authToken 後返回登錄頁
-  const navigate = useNavigate();
+
+  const { logout } = useAuth();
   const handleClick = () => {
-// 移除 localStorage 到 AuthContex logout function內
-    navigate('/login');
+    // 移除 localStorage 到 AuthContex logout function內
+    // nav 移除直接呼叫 logout function
+    logout();
+    // 這裡不用 nav 的原因是因為當呼叫login時，isAuthenticated 已經變成 false，State狀態在 TodoPage 改變，useEffect 就會執行自動跳轉到 loginPage
   };
   return (
     <StyledFooter>
