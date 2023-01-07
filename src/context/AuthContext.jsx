@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { createContext } from 'react';
+import { register } from '../api/auth';
+import * as jwt from 'jsonwebtoken'; // 這裡導入全部並命名為 jwt 做使用
 
 // 初始化定義 defaultAuth 資訊
 const defaultAuthContext = {
@@ -16,9 +18,9 @@ const AuthContext = createContext(defaultAuthContext);
 
 //建立 provider 來管理 context 內的狀態操作
 
-const AuthProvider = ({children}) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false) //預設是否認證
-  const [payload, setPayload] = useState(null) // 預設使用者資料為null
+const AuthProvider = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false); //預設是否認證
+  const [payload, setPayload] = useState(null); // 預設使用者資料為null
 
   //這裡Provider的value會定義defaultAuthContext內的值是什麼
   return (
@@ -26,7 +28,28 @@ const AuthProvider = ({children}) => {
       value={{
         isAuthenticated,
         currentMember: payload,
+        register: async (data) => {
+          //註冊需要的內容命名他是 data
+          //需要注意，在 AuthContext 不會直接知道使用者在註冊表單的輸入值，所以需要補上一個 data 當成調用函式時的參數
+          const { success, authToken } = await register({
+            username: data.username,
+            email: data.email,
+            password: data.password,
+          });
+          const tempPayload = jwt.decode(authToken); // 使用套件解析authToken值，但不能保證 token 是否有效 (但這裡是註冊表示如果填單寫正確應該沒有token認證問題)
+
+          // 判斷 tempPayload 是否有被解析成功
+          if (tempPayload) {
+            setPayload(tempPayload);
+            setIsAuthenticated(true);
+            localStorage.setItem('authToken', authToken); //解析成功把 token 放入 localStorage 內
+          } else {
+            setPayload(null);
+            setIsAuthenticated(false);
+          }
+          return success; // 最後回傳 success 給 SingupPage 觸發 alert 視窗
+        },
       }}
     ></AuthContext.Provider>
   );
-}
+};

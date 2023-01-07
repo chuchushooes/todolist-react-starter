@@ -30,14 +30,10 @@ const SignUpPage = () => {
       return;
     }
 
-    const { success, authToken } = await register({
-      username,
-      email,
-      password,
-    });
+    // 把 register api 功能搬到 AuthContext 內
 
     if (success) {
-      localStorage.setItem('authToken', authToken);
+      // 把 localStorage 搬到 AuthContext 內
       // 引用的套件，顯示成功並 return
       Swal.fire({
         title: '註冊成功',
