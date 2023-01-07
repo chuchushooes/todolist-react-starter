@@ -25,11 +25,7 @@ const LoginPage = () => {
     if (password.length === 0) {
       return;
     }
-    // 調用 login() 並傳入表單資料，解構取出success/authToken(在auth 的 login api 有 return 的二個值)
-    const { success, authToken } = await login({
-      username,
-      password,
-    });
+    // 將 login api 移到 AuthContext
 
     // 如果登錄成功了話，習慣上我們會把 token 存在 localStorage 內，就可以在 react 的每個頁面取用到
     // 取用到的話就可以去確認他是以認證的狀態

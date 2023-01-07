@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { createContext } from 'react';
-import { register } from '../api/auth';
+import { register, login } from '../api/auth';
 import * as jwt from 'jsonwebtoken'; // 這裡導入全部並命名為 jwt 做使用
 
 // 初始化定義 defaultAuth 資訊
@@ -48,6 +48,24 @@ const AuthProvider = ({ children }) => {
             setIsAuthenticated(false);
           }
           return success; // 最後回傳 success 給 SingupPage 觸發 alert 視窗
+        },
+        // login 原理同 register
+        login: async (data) => {
+          // 調用 login() 並傳入表單資料，解構取出success/authToken(在auth 的 login api 有 return 的二個值)
+          const { success, authToken } = await login({
+            username: data.username,
+            password: data.password,
+          });
+          const tempPayload = jwt.decode(authToken);
+          if (tempPayload) {
+            setPayload(tempPayload);
+            setIsAuthenticated(true);
+            localStorage.setItem('authToken', authToken);
+          } else {
+            setPayload(null);
+            setIsAuthenticated(false);
+          }
+          return success;
         },
       }}
     ></AuthContext.Provider>
