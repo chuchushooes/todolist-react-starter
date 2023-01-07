@@ -18,7 +18,7 @@ const AuthContext = createContext(defaultAuthContext);
 
 //建立 provider 來管理 context 內的狀態操作
 
-const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false); //預設是否認證
   const [payload, setPayload] = useState(null); // 預設使用者資料為null
 
@@ -27,7 +27,7 @@ const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         isAuthenticated,
-        currentMember: payload,
+        currentMember: payload && { id: payload.sub, name: payload.name }, //payload條件式，如果有值就讓再命名 id 和 name (這裡的 payload 還沒寫好，應該是 useState 內的 payload)
         register: async (data) => {
           //註冊需要的內容命名他是 data
           //需要注意，在 AuthContext 不會直接知道使用者在註冊表單的輸入值，所以需要補上一個 data 當成調用函式時的參數
@@ -67,7 +67,15 @@ const AuthProvider = ({ children }) => {
           }
           return success;
         },
+        // 登出不需要api ，把localStorage內的token移除就好，記得useState狀態要改變
+        logout: () => {
+          localStorage.removeItem('authToken');
+          setPayload(null);
+          setIsAuthenticated(false);
+        },
       }}
-    ></AuthContext.Provider>
+    >
+      {children}
+    </AuthContext.Provider>
   );
 };

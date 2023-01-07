@@ -39,7 +39,7 @@ const Footer = () => {
   // React Hooks 點擊後 localStorage 刪除 authToken 後返回登錄頁
   const navigate = useNavigate();
   const handleClick = () => {
-    localStorage.removeItem('authToken');
+// 移除 localStorage 到 AuthContex logout function內
     navigate('/login');
   };
   return (

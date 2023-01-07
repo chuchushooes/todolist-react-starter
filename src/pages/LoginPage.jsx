@@ -30,7 +30,7 @@ const LoginPage = () => {
     // 如果登錄成功了話，習慣上我們會把 token 存在 localStorage 內，就可以在 react 的每個頁面取用到
     // 取用到的話就可以去確認他是以認證的狀態
     if (success) {
-      localStorage.setItem('authToken', authToken);
+      // 把 localStorage 搬到 AuthContext 內
       // 引用的套件，顯示成功並 return
       Swal.fire({
         title: '登錄成功',
