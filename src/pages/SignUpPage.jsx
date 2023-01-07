@@ -8,8 +8,8 @@ import { ACLogoIcon } from 'assets/images';
 import { AuthInput } from 'components';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { register, checkPermission } from '../api/auth';
 import Swal from 'sweetalert2';
+import { useAuth } from '../context/AuthContext';
 
 const SignUpPage = () => {
   const [username, setUserName] = useState('');
@@ -17,6 +17,8 @@ const SignUpPage = () => {
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
+  // 取得 register 的方法和是否登入有效
+  const { register, isAuthenticated } = useAuth();
 
   const handleClick = async () => {
     //先驗證使用者輸入是否有值
@@ -31,6 +33,12 @@ const SignUpPage = () => {
     }
 
     // 把 register api 功能搬到 AuthContext 內
+    // 這裡也使用 register 回傳 success 值
+    const success = await register({
+      username: username,
+      email: email,
+      password: password,
+    });
 
     if (success) {
       // 把 localStorage 搬到 AuthContext 內
@@ -42,7 +50,7 @@ const SignUpPage = () => {
         position: 'top',
         timer: 1000,
       });
-      navigate('/todo'); //使用React Hook直接進行頁面跳轉，不用透過Link點擊
+      // nav移到別處判斷
       return;
     }
     Swal.fire({
@@ -55,22 +63,11 @@ const SignUpPage = () => {
   };
 
   useEffect(() => {
-    const checkTokenIsValid = async () => {
-      const authToken = localStorage.getItem('authToken');
-
-      if (!authToken) {
-        // 如果沒有authToken 就返回
-        return;
-      }
-
-      const result = await checkPermission(authToken);
-      if (result) {
-        // 如果結果成功就導向 todos 頁面
-        navigate('/todo');
-      }
-    };
-    checkTokenIsValid(); //執行上面寫好的fn
-  }, [navigate]); //加入deps，當nav改變useEffect才會改變，這裡是指當我們在login或signup page 時我們直接改router的路徑企圖直接前往todos時所做的防範
+    if (isAuthenticated) {
+      // 如果結果成功就導向 todos 頁面
+      navigate('/todo');
+    }
+  }, [navigate, isAuthenticated]); //這裡不需要做checkPermission 改成用 isAuthenticated 判斷
   return (
     <AuthContainer>
       <div>

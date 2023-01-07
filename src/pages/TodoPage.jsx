@@ -3,7 +3,7 @@ import { createContext } from 'react';
 import { Footer, Header, TodoCollection, TodoInput } from 'components';
 import { getTodos, createTodo, patchTodo, deleteTodo } from '../api/todos'; //串接建立好的 api
 import { useNavigate } from 'react-router-dom';
-import { checkPermission } from '../api/auth';
+import { useAuth } from '../context/AuthContext';
 
 // dummyTodos因為串了後端的db後就可刪除
 
@@ -13,6 +13,9 @@ const TodoPage = () => {
   const [inputValue, setInputValue] = useState('');
 
   const navigate = useNavigate();
+
+  //這裡不用取出方法，只要取出是否認證
+  const { isAuthenticated } = useAuth();
 
   const handleChange = (value) => {
     console.log('input', value);
@@ -176,7 +179,13 @@ const TodoPage = () => {
     getTodosAsync();
   }, []); //這裡deps空白是因為只有一開始需要拿資料之後不再使用
 
-  //把身分認證的 effect 搬到 AuthContext 內
+  // 把身分認證的 effect 搬到 AuthContext 內
+  // 這裡再使用 effect 判斷是否登錄，未登入就導向login
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login');
+    }
+  }, [navigate, isAuthenticated]);
 
   return (
     <div>

@@ -8,14 +8,17 @@ import { ACLogoIcon } from 'assets/images';
 import { AuthInput } from 'components';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { login, checkPermission } from '../api/auth';
 import Swal from 'sweetalert2';
+import { useAuth } from '../context/AuthContext';
 
 const LoginPage = () => {
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
+
+  // 取得 login的方法和是否登入有效
+  const { login, isAuthenticated } = useAuth;
 
   const handleClick = async () => {
     //先驗證使用者輸入是否有值
@@ -26,6 +29,11 @@ const LoginPage = () => {
       return;
     }
     // 將 login api 移到 AuthContext
+    // 這裡也使用 login 回傳 success 值
+    const success = await login({
+      username: username,
+      password: password,
+    });
 
     // 如果登錄成功了話，習慣上我們會把 token 存在 localStorage 內，就可以在 react 的每個頁面取用到
     // 取用到的話就可以去確認他是以認證的狀態
@@ -39,7 +47,7 @@ const LoginPage = () => {
         position: 'top',
         timer: 1000,
       });
-      navigate('/todo');
+      // nav 刪除這裡不須跳轉，由別處判斷
       return;
     }
     //登錄失敗的跳出欄位
@@ -53,22 +61,11 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    const checkTokenIsValid = async () => {
-      const authToken = localStorage.getItem('authToken');
-
-      if (!authToken) {
-        // 如果沒有authToken 就返回
-        return;
-      }
-
-      const result = await checkPermission(authToken);
-      if (result) {
-        // 如果結果成功就導向 todos 頁面
-        navigate('/todo');
-      }
-    };
-    checkTokenIsValid(); //執行上面寫好的fn
-  }, [navigate]); //加入deps，當nav改變useEffect才會改變，這裡是指當我們在login或signup page 時我們直接改router的路徑企圖直接前往todos時所做的防範
+    //如果已經認證就導向todo
+    if (isAuthenticated) {
+      navigate('/todo');
+    }
+  }, [navigate, isAuthenticated]); //這裡不需要做checkPermission 改成用 isAuthenticated 判斷
 
   return (
     <AuthContainer>
