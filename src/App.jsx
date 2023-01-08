@@ -6,7 +6,7 @@ import { AuthProvider } from 'context/AuthContext';
 這裡的 AuthProvider 是一個封裝好的 component，其內包含了 Context ，而他其下的元件都能使用它所提供的 value (裡面的props)，但我們還要去執行 useContext才能使用(會import進來useAuth)
 */
 
-const basename = process.env.REACT_APP_PUBLIC_URL;
+const basename = process.env.PUBLIC_URL;
 //之前設定的.env環境檔內的變數去執行，意思是我們會在這個根路由底下去執行其他路由流程，導向HomePage
 
 function App() {
