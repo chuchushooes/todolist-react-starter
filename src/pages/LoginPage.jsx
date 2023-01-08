@@ -18,7 +18,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   // 取得 login的方法和是否登入有效
-  const { login, isAuthenticated } = useAuth;
+  const { login, isAuthenticated } = useAuth();
 
   const handleClick = async () => {
     //先驗證使用者輸入是否有值

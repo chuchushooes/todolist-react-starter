@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useContext } from 'react';
 import { TodosContext } from '../pages/TodoPage';
 
-import { useAuth } from '.../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 const StyledFooter = styled.footer`
   display: flex;
