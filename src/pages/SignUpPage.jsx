@@ -50,7 +50,6 @@ const SignUpPage = () => {
         position: 'top',
         timer: 1000,
       });
-      // nav移到別處判斷
       return;
     }
     Swal.fire({

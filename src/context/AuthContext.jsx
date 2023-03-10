@@ -35,8 +35,8 @@ export const AuthProvider = ({ children }) => {
 
       if (!authToken) {
         // 如果沒有authToken後續就不用作check的動作
-        setPayload(null);
         setIsAuthenticated(false);
+        setPayload(null);
         return;
       }
 
@@ -64,6 +64,7 @@ export const AuthProvider = ({ children }) => {
         register: async (data) => {
           //註冊需要的內容命名他是 data
           //需要注意，在 AuthContext 不會直接知道使用者在註冊表單的輸入值，所以需要補上一個 data 當成調用函式時的參數
+
           const { success, authToken } = await register({
             username: data.username,
             email: data.email,
@@ -80,6 +81,7 @@ export const AuthProvider = ({ children }) => {
             setPayload(null);
             setIsAuthenticated(false);
           }
+
           return success; // 最後回傳 success 給 SingupPage 觸發 alert 視窗
         },
         // login 原理同 register
