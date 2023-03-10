@@ -1,6 +1,6 @@
 # 來一個 Todolist - Introduction
 
-[Demo網址請點我](https://chuchushooes.github.io/todolist-react-starter/login)
+[Demo 網址請點我](https://chuchushooes.github.io/todolist-react-starter/login)
 
 測試帳號: chuchu  
 測試密碼: chuchu123
@@ -10,6 +10,7 @@
 
 ## 功能列表 - Features
 
+- 使用者可登入註冊 todo-list
 - 使用者可藉由新增列表進行 todoItem 新增
 - 使用者可藉由 TodoCollection 雙擊指定 Item 的 title 去修改項目名稱
 - 使用者可藉由 TodoCollection 點擊指定 Item 後的 X 按鈕去刪除項目
