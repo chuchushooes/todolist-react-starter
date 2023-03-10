@@ -1,5 +1,8 @@
 # 來一個 Todolist - Introduction
 
+測試帳號: chuchu
+測試密碼: 
+
 一個簡單的 Todolist，可以新增刪除修改你的項目，趕快來用看看吧。
 ![image](https://github.com/chuchushooes/todolist-react-starter/blob/main/src/assets/gitImages/TodoPage.png)
 
